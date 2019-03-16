@@ -36,9 +36,9 @@ exports.findMatch = (req, res) => {
                   if(valArr.length - tc === keyArr.length){
                         const keyStr = valArr;
                         if(obj[keyStr]){
-                            obj[keyStr].push(inx);
+                            obj[keyStr].push((result[inx])["20"]);
                         }else{
-                            obj[keyStr] = [inx];
+                            obj[keyStr] = [((result[inx])["20"])];
                         }
                     }
                 })
@@ -84,7 +84,7 @@ exports.findUnmatch = (req, res) => {
                 }
             });
             if(valArr.length - tc === keyArr.length){
-            const keyStr = JSON.stringify(valArr);
+            const keyStr = valArr;
             if(match[keyStr]){
                 match[keyStr].push(inx);
             }else{
@@ -103,6 +103,7 @@ exports.findUnmatch = (req, res) => {
                     });
                 })
                 res.send({
+                    match : match,
                     unmatch:  Object.keys(unmatch).map((v)=>parseInt(v))
                 });
             }).catch(err => {
@@ -126,12 +127,16 @@ exports.archiveData = (req, res) => {
 
 exports.archived = (req, res) => {
     let query = req.query;
+    const valArr = [];
+    let obj = {};
     let confirmationStatus = '';
     let keyArr = Object.keys(query);
+    let index = keyArr.indexOf('32B');
+    keyArr.splice(index,1);
+    keyArr.push('30V');
     Archive.find({})
     .then(result => {
         result.forEach((val,inx)=>{
-                  const valArr = [];
                   if(req.query["32B"] && val["33B"]){
                         if(req.query["32B"]<val["33B"]){
                             valArr.push(req.query["32B"]);
@@ -150,17 +155,20 @@ exports.archived = (req, res) => {
                   if(valArr.length - tc === keyArr.length){
                         const keyStr = valArr;
                         if(obj[keyStr]){
-                            obj[keyStr].push(inx);
+                            obj[keyStr].push((result[inx])["20"]);
+
                         }else{
-                            obj[keyStr] = [inx];
+                            obj[keyStr] = [((result[inx])["20"])];
                         }
+                        confirmationStatus = 'Matched';
+                    }else{
+                        confirmationStatus = 'Unmatched';
                     }
                 })
-                res.send(obj);
-
-        }).catch(err => {
+                res.send(confirmationStatus);
+            }).catch(err => {
             res.status(500).send({
-                message: err.message || "error occured while retrieving data"
+                message: err.message || "error occured while retrieving symbols"
             });
         });
 }
