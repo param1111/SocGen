@@ -17,16 +17,19 @@ module.exports = (app) =>{
     next();
 });
 
-	//Retrieve all archives of specific symbol
+	//Retrieve all archives of matched values
 	app.get('/matched',archives.findMatch)
 
-	//Retrieve all distinct symbols
+	//Retrieve all archives of unmatched values
 	app.get('/unmatched',archives.findUnmatch)
 
-	//Retrieve all archives for a specific year
+	//Retrieve all archives
 	app.get('/archivedata', archives.archiveData)
 
 	//Implement Search criteria
 	app.get('/archive', archives.archived)
+
+	//Implement closeFit
+	app.get('/closefit', archives.closeFit)
 
 }

@@ -102,9 +102,9 @@ exports.findUnmatch = (req, res) => {
                         delete unmatch[val];
                     });
                 })
+
                 res.send({
-                    match : match,
-                    unmatch:  Object.keys(unmatch).map((v)=>parseInt(v))
+                    unmatch:  Object.keys(unmatch).map((v)=>(result[v]))
                 });
             }).catch(err => {
             res.status(500).send({
@@ -171,5 +171,54 @@ exports.archived = (req, res) => {
                 message: err.message || "error occured while retrieving symbols"
             });
         });
+}
+
+exports.closeFit = (req,res) => {
+    var obj = {};
+    let keyArr = ['77H','30T','30V','36'];
+    Archive.find({})
+        .then(result => {
+            result.forEach((val,inx)=>{
+                  const valArr = [];
+                  if(val["82A"] && val["87A"]){
+                        if(val["82A"]<val["87A"]){
+                            valArr.push(val["82A"]);
+                            valArr.push(val["87A"]);
+                        }else{
+                            valArr.push(val["87A"]);
+                            valArr.push(val["82A"]);
+                        }
+                    }
+                    if(val["32B"] && val["33B"]){
+                        if(val["32B"]<val["33B"]){
+                            valArr.push(val["32B"]);
+                            valArr.push(val["33B"]);
+                        }else{
+                            valArr.push(val["33B"]);
+                            valArr.push(val["32B"]);
+                        }
+                    }
+                  const tc = valArr.length;
+                    keyArr.forEach((key)=>{
+                        if(val[key]){
+                            valArr.push(val[key]);
+                        }
+                    });
+                  if(valArr.length - tc === keyArr.length){
+                        const keyStr = valArr;
+                        if(obj[keyStr]){
+                            obj[keyStr].push((result[inx])["20"]);
+                        }else{
+                            obj[keyStr] = [((result[inx])["20"])];
+                        }
+                    }
+                })
+                res.send(obj);
+            }).catch(err => {
+            res.status(500).send({
+                message: err.message || "error occured while retrieving symbols"
+            });
+        });
+
 }
 
