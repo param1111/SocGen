@@ -2,8 +2,11 @@ const Archive = require('./models.js')
 
 //Find all the distinct symbols in the archives
 
-exports.findSymbols = (req, res) => {
-    Archive.distinct('symbol')
+exports.findMatch = (req, res) => {
+    Archive.find({
+        '82A',
+        '87A'
+    }).$where('this.82A' == 'this.87A')
         .then(result => {
             res.send(result)
         }).catch(err => {
@@ -13,7 +16,7 @@ exports.findSymbols = (req, res) => {
         });
 }
 
-exports.findDataSymbols = (req, res) => {
+exports.findUnmatch = (req, res) => {
 	let symbol = req.params.symbol;
 	Archive.find({"symbol":symbol})
 	.then(result => {

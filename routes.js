@@ -18,10 +18,10 @@ module.exports = (app) =>{
 });
 
 	//Retrieve all archives of specific symbol
-	app.get('/archive/:symbol',archives.findDataSymbols);
+	app.get('/match',archives.findMatch)
 
 	//Retrieve all distinct symbols
-	app.get('/archives/symbols',archives.findSymbols)
+	app.get('/unmatch',archives.findUnmatch)
 
 	//Retrieve all archives for a specific year
 	app.get('/archive/year/:year', archives.archiveYear)
