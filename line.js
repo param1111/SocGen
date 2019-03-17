@@ -5,7 +5,7 @@ let parseData = [];
 var mongoose = require('mongoose');
 var assert = require('assert');
 var async = require('async');
-var dirname = '/Users/psi/Downloads/fullstack/Sample data/NewSampleData-930PM/one to one/Sample/SG one to one/';
+var dirname = '/Users/psi/Downloads/fullstack/Sample data/NewSampleData-930PM/close fit/Sample/sgclosefit/';
 let obj = {};
 
 // function readFiles(dirname,onContentLoaded){

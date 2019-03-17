@@ -1,16 +1,17 @@
-import axios from 'axios';
+var finalData = {};
 
-
-	function fetchYear(year){
+	function fetchArchive(year){
 		var URL = 'http://localhost:3001/'+ 
 			year;
 
-		return axios.get(URL)
-			.then(function(response){
-				console.log(response);
-				return response.data;
+		return fetch(URL)
+			.then((res)=>{
+				return res.json();
+			}).then(function(myJson){
+				console.log(myJson);
+				return (myJson);
 			});
 		}
 
-export default fetchYear
+export default fetchArchive;
 

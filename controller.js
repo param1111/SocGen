@@ -3,6 +3,7 @@ const Archive = require('./models.js')
 //Find all the distinct symbols in the archives
 
 exports.findMatch = (req, res) => {
+    var data = [];
     var obj = {};
     let keyArr = ['77H','30T','30V','36'];
     Archive.find({})
@@ -41,8 +42,9 @@ exports.findMatch = (req, res) => {
                             obj[keyStr] = [((result[inx])["20"])];
                         }
                     }
+                    data.push(obj);
                 })
-                res.send(obj);
+                res.send(data);
             }).catch(err => {
             res.status(500).send({
                 message: err.message || "error occured while retrieving symbols"
@@ -219,6 +221,5 @@ exports.closeFit = (req,res) => {
                 message: err.message || "error occured while retrieving symbols"
             });
         });
-
 }
 

@@ -1,20 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import fetchYear from '../util/api';
+import fetchArchive from '../util/api';
 
 
 
-function SelectYear(props) {
-    var year = ['matched', 'unmatched', 'Possible Match'];
+function SelectArchive(props) {
+    var archive = ['matched', 'unmatched', 'closed-fit'];
     return (
     <ul className='year'>
-      {year.map(function (year) {
+      {archive.map(function (archive) {
         return (
           <li
-            style={year === props.selectedYear ? {color: '#d0021b'} : null}
-            onClick={props.onSelect.bind(null, year)}
-            key={year}>
-              {year}
+            style={archive === props.selectedarchive ? {color: '#d0021b'} : null}
+            onClick={props.onSelect.bind(null, archive)}
+            key={archive}>
+              {archive}
           </li>
         )
       })}
@@ -22,105 +21,58 @@ function SelectYear(props) {
     )
 }
 
-function YearGrid (props) {
-  console.log(props);
-  return (
-    <ul className='popular-list'>
-      {props.data.map(function (data, index) {
-        console.log(data);
-        return (
-          <li key={data._id} className='popular-item'>
-            <div className='popular-rank'>#{index + 1}</div>
-            <ul className='space-list-items'>
-              <li>Stock Symbol : {data.symbol}</li>
-              <li>open : {data.open}</li>
-              <li>close : {data.close}</li>
-              <li>low : {data.low}</li>
-              <li>high : {data.high}</li>
-              <li>volume : {data.volume}</li>
-            </ul>
-          </li>
-        )
-      })}
-    </ul>
-  )
+function ArchiveGrid (props) {
+  console.log(props);  
 }
 
-
-SelectYear.propTypes = {
-    selectedYear: PropTypes.string.isRequired,
-    onSelect: PropTypes.func.isRequired,
-};
 
 class Popular extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            selectedYear: 'matched',
+            selectedArchive: 'matched',
             data: null,
-
-            currentPage : 1,
-            dataPerPage : 500,
         };
 
-        this.updateYear = this.updateYear.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+        this.updateArchive = this.updateArchive.bind(this);
     }
 
     componentDidMount() {
         // AJAX
-        this.updateYear(this.state.selectedYear)
+        this.updateArchive(this.state.selectedArchive)
     }
 
-    handleClick(event) {
-        this.setState({
-            currentPage : Number(event.target.id)
-        });
-    }
-
-
-    updateYear(year) {
-
+    updateArchive(archive) {
         this.setState(function() {
             return {
-                selectedYear: year,
-                data: null
+                selectedArchive: archive,
+                data: null,
             }
         });
-
-        fetchYear(year)
-            .then(function(data) {
-                
+         fetchArchive(archive)
+            .then(function(data) {                
                 this.setState(function() {
-
                     return {
                         data: data,
                     }
                 });
             }.bind(this));
     }
-
     render() {
-        // const {data, currentPage, dataPerPage} = this.state;
-        //         var indexOfLastData = currentPage * dataPerPage;
-        //         var indexOfFirstData = indexOfLastData - dataPerPage;
-        //         var currentData = null;
-        //         var pageNumbers = [];
-        //         if(this.state.data){
-        //             currentData = data.slice(indexOfFirstData, indexOfLastData);
-        //             for (let i = 1; i <= Math.ceil(data.length / dataPerPage); i++) {
-        //                 pageNumbers.push(i);
-        //          }
-        //     }           
-                
-        return (
-        <div>
-          <SelectYear
-          selectedYear={this.state.selectedYear}
-          onSelect={this.updateYear} 
-          />
+      const {data} = this.state;
+      var currentData = null;
+      if(this.state.data){
+        currentData = this.state.data
+      }
+        return(
+       <div>
+          <SelectArchive
+          selectedArchive={this.state.selectedArchive}
+          onSelect={this.updateArchive} 
+          /> 
+          {!currentData ? <p>Loading</p> : <ArchiveGrid data = {currentData} /> }     
       </div>
         )
     }
 }
-export default Popular
+export default Popular;

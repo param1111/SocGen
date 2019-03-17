@@ -30,6 +30,6 @@ module.exports = (app) =>{
 	app.get('/archive', archives.archived)
 
 	//Implement closeFit
-	app.get('/closefit', archives.closeFit)
+	app.get('/close-fit', archives.closeFit)
 
 }
